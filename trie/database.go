@@ -19,8 +19,7 @@ type DatabaseReader interface {
 }
 
 type Database struct {
-	diskDB store.Database // Persistent storage for matured trie nodes
-
+	diskDB    store.Database              // Persistent storage for matured trie nodes
 	nodes     map[common.Hash]*cachedNode // Data and references relationships of a node
 	preImages map[common.Hash][]byte      // PreImages of nodes from the secure trie
 	secKeyBuf [secureKeyLength]byte       // Ephemeral buffer for calculating preImage keys

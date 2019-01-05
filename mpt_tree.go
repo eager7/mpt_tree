@@ -33,7 +33,7 @@ func NewMptTree(path string, root common.Hash) (mpt *Mpt, err error) {
 	return mpt, nil
 }
 
-func (m *Mpt) Set(key, value []byte) error {
+func (m *Mpt) Put(key, value []byte) error {
 	return m.trie.TryUpdate(key, value)
 }
 
