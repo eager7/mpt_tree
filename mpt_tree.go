@@ -7,52 +7,56 @@ import (
 	"sync"
 )
 
-type Tree struct {
+type Mpt struct {
 	path    string
-	mpt     Trie
+	trie    Trie
 	db      Database
 	levelDB *store.LevelDBStore
 	lock    sync.RWMutex
 }
 
-func NewMptTree(path string, root common.Hash) (tree *Tree, err error) {
-	tree = new(Tree)
-	tree.levelDB, err = store.NewLevelDBStore(path, 0, 0)
+func NewMptTree(path string, root common.Hash) (mpt *Mpt, err error) {
+	mpt = new(Mpt)
+	mpt.levelDB, err = store.NewLevelDBStore(path, 0, 0)
 	if err != nil {
 		return nil, err
 	}
-	tree.db = NewDatabase(tree.levelDB)
+	mpt.db = NewDatabase(mpt.levelDB)
 	fmt.Println("Open Trie Hash:", root.HexString())
-	tree.mpt, err = tree.db.OpenTrie(root)
+	mpt.trie, err = mpt.db.OpenTrie(root)
 	if err != nil {
 		fmt.Println("open mpt failed:", err)
-		if tree.mpt, err = tree.db.OpenTrie(common.Hash{}); err != nil {
+		if mpt.trie, err = mpt.db.OpenTrie(common.Hash{}); err != nil {
 			return nil, err
 		}
 	}
-	return tree, nil
+	return mpt, nil
 }
 
-func (m *Tree) Set(key, value []byte) error {
-	return m.mpt.TryUpdate(key, value)
+func (m *Mpt) Set(key, value []byte) error {
+	return m.trie.TryUpdate(key, value)
 }
 
-func (m *Tree) Get(key []byte) ([]byte, error) {
-	return m.mpt.TryGet(key)
+func (m *Mpt) Get(key []byte) ([]byte, error) {
+	return m.trie.TryGet(key)
 }
 
-func (m *Tree) Del(key []byte) error {
-	return m.mpt.TryDelete(key)
+func (m *Mpt) Del(key []byte) error {
+	return m.trie.TryDelete(key)
 }
 
-func (m *Tree) Commit() error {
-	root, err := m.mpt.Commit(nil)
+func (m *Mpt) Commit() error {
+	root, err := m.trie.Commit(nil)
 	if err != nil {
 		return err
 	}
 	return m.db.TrieDB().Commit(root, false)
 }
 
-func (m *Tree) Hash() common.Hash {
-	return m.mpt.Hash()
+func (m *Mpt) Close() error {
+	return m.levelDB.Close()
+}
+
+func (m *Mpt) Hash() common.Hash {
+	return m.trie.Hash()
 }
