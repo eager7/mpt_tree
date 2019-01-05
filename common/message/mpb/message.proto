@@ -1,0 +1,45 @@
+syntax = "proto3";
+package mpb;
+
+//ecoball related message
+enum  Identify {
+    APP_MSG_HASH                = 0;
+    APP_MSG_ADDRESS             = 1;
+    APP_MSG_TRANSACTION         = 2;
+    APP_MSG_TRANSACTION_DEPLOY  = 3;
+    APP_MSG_TRANSACTION_INVOKE  = 4;
+    APP_MSG_TRANSACTION_TRANSFER= 5;
+    APP_MSG_HEADER              = 6;
+    APP_MSG_BLOCK               = 7;
+    APP_MSG_SHARD_BLOCK         = 8;
+    APP_MSG_MINOR_BLOCK         = 9;
+    APP_MSG_CM_BLOCK            = 10;
+    APP_MSG_FINAL_BLOCK         = 11;
+    APP_MSG_VC_BLOCK            = 12;
+    APP_MSG_SIGNPRE             = 13;
+    APP_MSG_TIMEOUT             = 14;
+    APP_MSG_SHARDING_PACKET     = 15;
+    APP_MSG_CONSENSUS_PACKET    = 16;
+    APP_MSG_P2PRTSYN            = 17;
+    APP_MSG_P2PRTSYNACK         = 18;
+    APP_MSG_GOSSIP              = 19;
+    APP_MSG_GOSSIP_PULL         = 20;
+    APP_MSG_DKGSIJ              = 21;
+    APP_MSG_DKGNLQUAL           = 22;
+    APP_MSG_DKGLQUAL            = 23;
+    APP_MSG_SYNC_REQUEST        = 24;
+    APP_MSG_SYNC_RESPONSE       = 25;
+    APP_MSG_STRING              = 26;
+    APP_MSG_EBALLSCAN_HEIGHT    = 27;
+    APP_MSG_BLOCK_REQUEST       = 28;
+    APP_MSG_BLOCK_RESPONSE      = 29;
+
+    APP_MSG_UNDEFINED           = 30;
+}
+
+
+message Message {
+    uint64      Nonce           = 1;
+    Identify    Identify        = 2;
+	bytes       Payload         = 4;
+}
