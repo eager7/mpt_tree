@@ -35,9 +35,9 @@ func TestStore(t *testing.T) {
 	fmt.Println(s.SearchAll())
 	fmt.Println(s.Get([]byte("test")))
 	//存储
-	s.Put([]byte("key1"), []byte("value1"))
-	s.Put([]byte("key2"), []byte("value2"))
-	s.Put([]byte("key3"), []byte("value3"))
+	_ = s.Put([]byte("key1"), []byte("value1"))
+	_ = s.Put([]byte("key2"), []byte("value2"))
+	_ = s.Put([]byte("key3"), []byte("value3"))
 	//读取
 	if v, err := s.Get([]byte("key1")); err != nil {
 		if !bytes.Equal(v, []byte("value1")) {
@@ -54,7 +54,7 @@ func TestStore(t *testing.T) {
 	s.BatchPut([]byte("key02"), []byte("value02"))
 	s.BatchPut([]byte("key03"), []byte("value03"))
 	s.BatchPut([]byte("key04"), []byte("value04"))
-	s.BatchCommit()
+	_ = s.BatchCommit()
 	if v, err := s.Get([]byte("key03")); err != nil {
 		if !bytes.Equal(v, []byte("value03")) {
 			t.Fatal("value1 error")
@@ -82,13 +82,13 @@ func TestStore(t *testing.T) {
 
 func BenchmarkLevelDB(b *testing.B) {
 	for i := 0; i < b.N; i++ {
-		s.Put([]byte("key"), []byte("value"))
+		_ = s.Put([]byte("key"), []byte("value"))
 		v, _ := s.Get([]byte("key"))
 		elog.Log.Debug(string(v))
 	}
 }
 
 func init() {
-	os.RemoveAll("/tmp/store_benchmark")
+	_ = os.RemoveAll("/tmp/store_benchmark")
 	s, _ = store.NewBlockStore("/tmp/store_benchmark")
 }

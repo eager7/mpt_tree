@@ -8,24 +8,48 @@ import (
 )
 
 type MptTree struct {
-	path   string
-	trie   Trie
-	db     Database
-	diskDb *store.LevelDBStore
-	lock   sync.RWMutex
+	path    string
+	mpt     Trie
+	db      Database
+	levelDB *store.LevelDBStore
+	lock    sync.RWMutex
 }
 
 func NewMptTree(path string, root common.Hash) (tree *MptTree, err error) {
 	tree = new(MptTree)
-	tree.diskDb, err = store.NewLevelDBStore(path, 0, 0)
+	tree.levelDB, err = store.NewLevelDBStore(path, 0, 0)
 	if err != nil {
 		return nil, err
 	}
-	tree.db = NewDatabase(tree.diskDb)
+	tree.db = NewDatabase(tree.levelDB)
 	fmt.Println("Open Trie Hash:", root.HexString())
-	tree.trie, err = tree.db.OpenTrie(root)
+	tree.mpt, err = tree.db.OpenTrie(root)
 	if err != nil {
-		tree.trie, _ = tree.db.OpenTrie(common.Hash{})
+		tree.mpt, _ = tree.db.OpenTrie(common.Hash{})
 	}
 	return tree, nil
+}
+
+func (m *MptTree) Set(key, value []byte) error {
+	return m.mpt.TryUpdate(key, value)
+}
+
+func (m *MptTree) Get(key []byte) ([]byte, error) {
+	return m.mpt.TryGet(key)
+}
+
+func (m *MptTree) Del(key []byte) error {
+	return m.mpt.TryDelete(key)
+}
+
+func (m *MptTree) Commit() error {
+	root, err := m.mpt.Commit(nil)
+	if err != nil {
+		return err
+	}
+	return m.db.TrieDB().Commit(root, false)
+}
+
+func (m *MptTree) Hash() common.Hash {
+	return m.mpt.Hash()
 }

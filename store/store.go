@@ -18,7 +18,6 @@ package store
 
 import (
 	"fmt"
-	"github.com/eager7/mpt_tree/common/elog"
 	"github.com/eager7/mpt_tree/common/errors"
 	"github.com/syndtr/goleveldb/leveldb"
 	errLevel "github.com/syndtr/goleveldb/leveldb/errors"
@@ -27,10 +26,6 @@ import (
 	"github.com/syndtr/goleveldb/leveldb/opt"
 	"github.com/syndtr/goleveldb/leveldb/util"
 )
-
-var log = elog.NewLogger("store", elog.DebugLog)
-
-const PathBlock = "/DataBase/block"
 
 var (
 	ErrNotFound         = leveldb.ErrNotFound
