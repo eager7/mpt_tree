@@ -1,7 +1,8 @@
-package mpt_tree
+package mpt_test
 
 import (
 	"fmt"
+	"github.com/eager7/mpt_tree"
 	"github.com/eager7/mpt_tree/common"
 	"os"
 	"testing"
@@ -9,5 +10,5 @@ import (
 
 func TestNewMptTree(t *testing.T) {
 	_ = os.RemoveAll("/tmp/tree")
-	fmt.Println(NewMptTree("/tmp/tree", common.SingleHash([]byte("test"))))
+	fmt.Println(mpt.NewMptTree("/tmp/tree", common.SingleHash([]byte("test"))))
 }
