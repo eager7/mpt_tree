@@ -25,7 +25,10 @@ func NewMptTree(path string, root common.Hash) (tree *MptTree, err error) {
 	fmt.Println("Open Trie Hash:", root.HexString())
 	tree.mpt, err = tree.db.OpenTrie(root)
 	if err != nil {
-		tree.mpt, _ = tree.db.OpenTrie(common.Hash{})
+		fmt.Println("open mpt failed:", err)
+		if tree.mpt, err = tree.db.OpenTrie(common.Hash{}); err != nil {
+			return nil, err
+		}
 	}
 	return tree, nil
 }
