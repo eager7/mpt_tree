@@ -28,7 +28,7 @@ import (
 var MaxTrieCacheGen = uint16(120)
 
 const (
-	maxPastTries      = 12
+	maxPastTries      = 12 //存储12个历史状态树在内存,可以快速应对分叉回滚
 	codeSizeCacheSize = 100000
 )
 

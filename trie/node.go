@@ -17,17 +17,19 @@ type node interface {
 }
 
 type (
+	//分支节点,可挂载17个子节点,前16个对应16进制,最后一个存储自身数据
 	fullNode struct {
 		Children [17]node // Actual trie node data to encode/decode (needs custom encoder)
 		flags    nodeFlag
 	}
+	//扩展节点,存在合并节点来缩短数深度的可能性,因此子节点既可能是扩展节点,也可能是叶子节点
 	shortNode struct {
 		Key   []byte
 		Val   node
 		flags nodeFlag
 	}
 	hashNode  []byte
-	valueNode []byte
+	valueNode []byte //叶子节点,存储数据的RPL编码值
 )
 
 func (n *fullNode) EncodeRLP(w io.Writer) error {
